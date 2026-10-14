@@ -1,0 +1,16 @@
+{
+  "name": "DALALA Motors & Machinery",
+  "short_name": "DALALA",
+  "description": "Ethiopian marketplace for cars, trucks and machinery.",
+  "start_url": "/en",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f4efe6",
+  "theme_color": "#12110e",
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    { "src": "/__grok/icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
