@@ -15,7 +15,7 @@ export function AppErrorComponent({ error }: ErrorComponentProps) {
       <span className="text-danger" aria-hidden="true">
         <TriangleAlert className="size-10" strokeWidth={2} />
       </span>
-      <h1 className="font-display text-2xl">DALALA</h1>
+      <h1 className="font-display text-2xl">BULTUM COMPANY</h1>
       <p className="max-w-md text-sm break-words text-muted">{errorMessage(error)}</p>
     </main>
   );

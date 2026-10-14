@@ -9,10 +9,10 @@ function sameSecret(expected: string, received: string) {
 }
 
 const welcome = {
-  en: "DALALA Motors & Machinery. Open the yard to browse cars, trucks, and machines across Ethiopia.",
-  am: "DALALA መኪና እና ማሽን። መኪና፣ የጭነት መኪና እና ማሽን ለማየት ግቢውን ይክፈቱ።",
-  om: "DALALA konkolaataa fi maashina. Konkolaataa, fe'umsaa fi maashina ilaaluuf dirree bani.",
-  so: "DALALA baabuur iyo mashiin. Fur barxadda si aad u aragto baabuurta, xamuulka, iyo mashiinnada.",
+  en: "BULTUM COMPANY. Open the yard to browse cars, trucks, and machines across Ethiopia.",
+  am: "BULTUM COMPANY መኪና እና ማሽነሪ። መኪና፣ የጭነት መኪና እና ማሽን ለማየት ግቢውን ይክፈቱ።",
+  om: "BULTUM COMPANY konkolaataa fi maashinoota. Konkolaataa, fe'umsaa fi maashina ilaaluuf dirree bani.",
+  so: "BULTUM COMPANY baabuur iyo mashiin. Fur barxadda si aad u aragto baabuurta, xamuulka, iyo mashiinnada.",
 };
 
 /**
@@ -55,7 +55,7 @@ export async function handleTelegramWebhook(request: Request): Promise<Response>
   const chatId = update.message?.chat?.id;
   if (text === "/start" && typeof chatId === "number") {
     const appUrl = env("APP_PUBLIC_URL");
-    const button = appUrl ? [[{ text: "Open DALALA", web_app: { url: appUrl } }]] : undefined;
+    const button = appUrl ? [[{ text: "Open BULTUM", web_app: { url: appUrl } }]] : undefined;
     try {
       await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
         method: "POST",

@@ -16,8 +16,8 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { title: "DALALA Motors & Machinery" },
-      { name: "description", content: "Cars, trucks, and machinery listed across Ethiopia. Prices in birr." },
+      { title: "BULTUM COMPANY" },
+      { name: "description", content: "BULTUM COMPANY — cars, trucks, machinery and agricultural equipment across Ethiopia." },
       { name: "theme-color", content: "#12110E" },
       { name: "mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
@@ -26,8 +26,8 @@ export const Route = createRootRoute({
     links: [
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       { rel: "stylesheet", href: appCss },
-      { rel: "manifest", href: "/__grok/manifest.webmanifest" },
-      { rel: "apple-touch-icon", href: "/__grok/icon-180.png" },
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "apple-touch-icon", href: "/bultum-icon-180.png" },
     ],
   }),
   component: () => (

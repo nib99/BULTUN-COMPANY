@@ -15,7 +15,7 @@ const api = async (method, body) => {
 };
 await api("setWebhook", { url: webhook, secret_token: secret, allowed_updates: ["message"] });
 await api("setMyCommands", { commands: [
-  { command: "start", description: "Open DALALA marketplace" },
+  { command: "start", description: "Open BULTUM COMPANY marketplace" },
   { command: "sell", description: "List a vehicle or machine" },
   { command: "help", description: "Get help" }
 ] });

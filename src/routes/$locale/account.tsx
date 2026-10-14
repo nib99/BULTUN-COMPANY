@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { UserButton } from "@/lib/auth/gates";
-import { GROK_PROVIDERS, signIn } from "@/lib/auth/client";
+import { AUTH_PROVIDERS, signIn } from "@/lib/auth/client";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { dict, TRANSLATION_REVIEW } from "@/lib/i18n";
 import { accountFacts, listInquiries } from "@/lib/marketplace/api";
@@ -64,7 +64,7 @@ function AccountPage() {
       {!isPending && !user ? (
         <section className="space-y-3 rounded-card border border-line-soft bg-card p-4">
           <p>{copy.account.guest}</p>
-          {GROK_PROVIDERS.map((provider) => (
+          {AUTH_PROVIDERS.map((provider) => (
             <button
               key={provider.providerId}
               type="button"

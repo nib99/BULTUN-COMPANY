@@ -1,4 +1,4 @@
--- DALALA marketplace foundation.
+-- BULTUM COMPANY marketplace foundation.
 -- Money is integer santim: 1 ETB = 100 santim. Do not store birr as a float.
 -- Identifiers are text (app-generated UUID or stable demo ids), not guessable sequences.
 

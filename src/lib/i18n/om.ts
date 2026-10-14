@@ -14,7 +14,7 @@ export const om: Dict = {
     am: "አማርኛ",
     so: "Soomaali",
   },
-  brand: { name: "DALALA", motors: "Konkolaataa fi maashina" },
+  brand: { name: "BULTUM COMPANY", motors: "Konkolaataa fi Maashinoota" },
   door: {
     kicker: "Itoophiyaa",
     title: "Afaan filadhu",
@@ -152,8 +152,8 @@ export const om: Dict = {
       "Afaan Oromoo, Amarinyaa fi Afaan Somaalee gamaaggama namaa barbaadu, keessattuu barruu seeraa fi kaffaltii yoo dhufan.",
     telegramTitle: "Telegram",
     telegramBody:
-      "Botii DALALA keessatti odeeffannoon baninsaa mallattoo Telegram tiin sarvarii irratti ni mirkanaa'a. Ijaarsa kun mirkaneessa sana seenumsa hin godhu.",
-    telegramIdle: "Odeeffannoo baninsaa mirkaneessuuf botii Telegram irraa DALALA bani.",
+      "Botii BULTUM keessatti odeeffannoon baninsaa mallattoo Telegram tiin sarvarii irratti ni mirkanaa'a. Ijaarsa kun mirkaneessa sana seenumsa hin godhu.",
+    telegramIdle: "Odeeffannoo baninsaa mirkaneessuuf botii Telegram irraa BULTUM bani.",
     telegramChecking: "Odeeffannoo baninsaa mirkanaa'aa jira…",
     telegramOk: "Mallattoon sirrii dha. Herrega waliin walitti hidhuun itti aanu.",
     telegramBad: "Odeeffannoon baninsaa kun fudhatama dhabe.",

@@ -12,7 +12,7 @@ export const en = {
     am: "አማርኛ",
     so: "Soomaali",
   },
-  brand: { name: "DALALA", motors: "Motors & Machinery" },
+  brand: { name: "BULTUM COMPANY", motors: "Cars & Machinery" },
   door: {
     kicker: "Ethiopia",
     title: "Choose a language",
@@ -150,8 +150,8 @@ export const en = {
       "Afaan Oromoo, Amharic, and Somali still need a competent human review, especially any future legal or payment text.",
     telegramTitle: "Telegram",
     telegramBody:
-      "Inside the DALALA bot, launch data is checked on the server with Telegram’s signature. This build does not turn that check into a signed-in session.",
-    telegramIdle: "Open DALALA from the Telegram bot to check launch data.",
+      "Inside the BULTUM bot, launch data is checked on the server with Telegram’s signature. This build does not turn that check into a signed-in session.",
+    telegramIdle: "Open BULTUM from the Telegram bot to check launch data.",
     telegramChecking: "Checking launch data…",
     telegramOk: "The signature is valid. Linking it to an account comes next.",
     telegramBad: "This launch data was rejected.",

@@ -11,7 +11,7 @@ export const Route = createFileRoute("/$locale/l/$listingId")({
     return listing;
   },
   head: ({ loaderData }) => ({
-    meta: loaderData ? [{ title: `${loaderData.title} — DALALA` }, { name: "description", content: loaderData.summary }] : [],
+    meta: loaderData ? [{ title: `${loaderData.title} — BULTUM COMPANY` }, { name: "description", content: loaderData.summary }] : [],
   }),
   notFoundComponent: Missing,
   component: Detail,
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/$locale/l/$listingId")({
 function Missing() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-16">
-      <h1 className="font-display text-4xl">DALALA</h1>
+      <h1 className="font-display text-4xl">BULTUM COMPANY</h1>
       <p className="mt-3 text-muted">This listing is not available.</p>
     </main>
   );

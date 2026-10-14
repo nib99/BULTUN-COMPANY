@@ -14,7 +14,7 @@ export const am: Dict = {
     am: "አማርኛ",
     so: "Soomaali",
   },
-  brand: { name: "DALALA", motors: "መኪና እና ማሽን" },
+  brand: { name: "BULTUM COMPANY", motors: "መኪናዎች እና ማሽነሪ" },
   door: {
     kicker: "ኢትዮጵያ",
     title: "ቋንቋ ይምረጡ",
@@ -151,8 +151,8 @@ export const am: Dict = {
     review: "አፋን ኦሮሞ፣ አማርኛ እና ሶማልኛ የሰው ግምገማ ይፈልጋሉ፣ በተለይ ወደፊት የሚመጣ የሕግ ወይም የክፍያ ጽሑፍ።",
     telegramTitle: "ቴሌግራም",
     telegramBody:
-      "በDALALA ቦት ውስጥ የመክፈቻ መረጃ በአገልጋዩ ላይ በቴሌግራም ፊርማ ይረጋገጣል። ይህ እትም ያንን ማረጋገጫ ወደ መግቢያ አያደርገውም።",
-    telegramIdle: "የመክፈቻ መረጃን ለመፈተሽ DALALAን ከቴሌግራም ቦት ይክፈቱ።",
+      "በBULTUM ቦት ውስጥ የመክፈቻ መረጃ በአገልጋዩ ላይ በቴሌግራም ፊርማ ይረጋገጣል። ይህ እትም ያንን ማረጋገጫ ወደ መግቢያ አያደርገውም።",
+    telegramIdle: "የመክፈቻ መረጃን ለመፈተሽ BULTUMን ከቴሌግራም ቦት ይክፈቱ።",
     telegramChecking: "የመክፈቻ መረጃ በመረጋገጥ ላይ…",
     telegramOk: "ፊርማው ትክክል ነው። ከመለያ ጋር ማገናኘት ቀጣዩ እርምጃ ነው።",
     telegramBad: "ይህ የመክፈቻ መረጃ ተቀባይነት አላገኘም።",

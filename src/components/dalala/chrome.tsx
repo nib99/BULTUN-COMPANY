@@ -10,10 +10,22 @@ export const btnGhost =
 
 export function Mark({ className = "size-10" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 32 32" className={className} aria-hidden="true">
-      <rect width="32" height="32" rx="7" className="fill-ink" />
-      <path className="fill-gold" d="M7.2 6h8.2c5.4 0 9.4 3.6 9.4 10S20.8 26 15.4 26H7.2V6z" />
-      <path className="fill-emerald" d="M11.6 10.4h3.4c2.7 0 4.4 1.8 4.4 5.6s-1.7 5.6-4.4 5.6h-3.4V10.4z" />
+    <svg viewBox="0 0 96 96" className={className} role="img" aria-label="BULTUM COMPANY logo">
+      <defs>
+        <linearGradient id="bultumGold" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stopColor="#FFD83D" />
+          <stop offset="1" stopColor="#F0A900" />
+        </linearGradient>
+      </defs>
+      <rect x="2" y="2" width="92" height="92" rx="26" fill="#061A33" />
+      <circle cx="48" cy="46" r="35" fill="none" stroke="url(#bultumGold)" strokeWidth="6" strokeDasharray="7 5" />
+      <path d="M30 25h17c11 0 18 7 18 18s-7 18-18 18h-8v10H30V25Zm9 9v18h7c5.5 0 9-3.1 9-9s-3.5-9-9-9h-7Z" fill="white" />
+      <path d="m49 62 12-16 6 5-12 17-9 2 3-8Z" fill="url(#bultumGold)" />
+      <path d="M59 49 69 38l7 2-11 14-6-5Z" fill="#FFD83D" />
+      <path d="m69 38 9 2 7-6-4-5-10 4-2 5Z" fill="#F0A900" />
+      <path d="M63 54h12l7 6-2 6H59l4-12Z" fill="#F0A900" />
+      <circle cx="65" cy="69" r="5" fill="#061A33" stroke="#FFD83D" strokeWidth="3" />
+      <circle cx="78" cy="69" r="5" fill="#061A33" stroke="#FFD83D" strokeWidth="3" />
     </svg>
   );
 }
@@ -60,8 +72,8 @@ export function TopBar({ locale }: { locale: Locale }) {
         <Link to="/$locale" params={{ locale }} className="flex min-h-11 items-center gap-2">
           <Mark className="size-9" />
           <span className="leading-none">
-            <span className="block font-display text-lg tracking-wide text-ink">{copy.brand.name}</span>
-            <span className="block text-xs text-muted">{copy.brand.motors}</span>
+            <span className="block text-base font-black tracking-tight text-ink">BULTUM COMPANY</span>
+            <span className="block text-[11px] font-bold text-muted">Cars & Machinery</span>
           </span>
         </Link>
         <nav className="ml-auto hidden items-center gap-1 md:flex" aria-label={copy.brand.name}>

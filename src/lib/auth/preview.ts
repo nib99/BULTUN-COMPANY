@@ -8,7 +8,7 @@
  * (broker: `app-builder-deployer/auth/src/preview-oauth.ts`). Baking it here lets
  * the live preview do REAL sign-in — no demo/mock users — with no platform
  * injection. When deployed the deployer injects a per-app
- * `GROK_AUTH_*` that overrides these (see `server.ts`).
+ * `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` that configure production Google OAuth (see `server.ts`).
  *
  * These MUST equal the broker's `GROK_PREVIEW_CLIENT_ID` /
  * `GROK_PREVIEW_CLIENT_SECRET` (set in the broker's Vercel env; the broker stores

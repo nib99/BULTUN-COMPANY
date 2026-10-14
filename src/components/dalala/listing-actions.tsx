@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { SignInGate } from "@/lib/auth/gates";
-import { GROK_PROVIDERS, signIn } from "@/lib/auth/client";
+import { AUTH_PROVIDERS, signIn } from "@/lib/auth/client";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { dict, type Locale } from "@/lib/i18n";
 import { ownsListing, listSaved, sendInquiry, sendReport, toggleFavorite } from "@/lib/marketplace/api";
@@ -133,7 +133,7 @@ export function ListingActions({
             fallback={
               <div className="space-y-3">
                 <p className="text-sm text-muted">{copy.listing.signIn}</p>
-                {GROK_PROVIDERS.map((provider) => (
+                {AUTH_PROVIDERS.map((provider) => (
                   <button
                     key={provider.providerId}
                     type="button"

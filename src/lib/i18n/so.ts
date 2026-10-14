@@ -14,7 +14,7 @@ export const so: Dict = {
     am: "አማርኛ",
     so: "Soomaali",
   },
-  brand: { name: "DALALA", motors: "Baabuur & mashiin" },
+  brand: { name: "BULTUM COMPANY", motors: "Baabuur & Mashiin" },
   door: {
     kicker: "Itoobiya",
     title: "Dooro luqad",
@@ -152,8 +152,8 @@ export const so: Dict = {
       "Afaan Oromoo, Axmaari, iyo Soomaali waxay u baahan yihiin dib-u-eegis aadanaha, gaar ahaan qoraal sharci ama lacag-bixin ah oo dambe yimaada.",
     telegramTitle: "Telegram",
     telegramBody:
-      "Gudaha botka DALALA, xogta furitaanka waxaa server-ka ku xaqiijiya saxiixa Telegram. Dhismuhani xaqiijintaas uma beddelo galitaan.",
-    telegramIdle: "Ka fur DALALA botka Telegram si loo hubiyo xogta furitaanka.",
+      "Gudaha botka BULTUM, xogta furitaanka waxaa server-ka ku xaqiijiya saxiixa Telegram. Dhismuhani xaqiijintaas uma beddelo galitaan.",
+    telegramIdle: "Ka fur BULTUM botka Telegram si loo hubiyo xogta furitaanka.",
     telegramChecking: "Xogta furitaanka waa la hubinayaa…",
     telegramOk: "Saxiixa waa sax. Ku xirista akoonka ayaa xigta.",
     telegramBad: "Xogtan furitaanka waa la diiday.",
