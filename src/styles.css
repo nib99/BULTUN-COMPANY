@@ -1,0 +1,109 @@
+@import "tailwindcss";
+@import "@fontsource/manrope/400.css";
+@import "@fontsource/manrope/500.css";
+@import "@fontsource/manrope/600.css";
+@import "@fontsource/manrope/700.css";
+@import "@fontsource/fraunces/500.css";
+@import "@fontsource/fraunces/700.css";
+@import "@fontsource/noto-sans-ethiopic/ethiopic-400.css";
+@import "@fontsource/noto-sans-ethiopic/ethiopic-600.css";
+@import "@fontsource/noto-sans-ethiopic/ethiopic-700.css";
+@import "@fontsource/noto-serif-ethiopic/ethiopic-600.css";
+@import "@fontsource/noto-serif-ethiopic/ethiopic-700.css";
+
+@theme {
+  --color-ink: #12110e;
+  --color-ink-2: #1c1a16;
+  --color-panel: #242019;
+  --color-ivory: #f4efe6;
+  --color-ivory-2: #e8e1d4;
+  --color-card: #fbf7f0;
+  --color-muted: #6f675c;
+  --color-line: #3a342b;
+  --color-line-soft: #d9d0c2;
+  --color-emerald: #1f6b4a;
+  --color-emerald-2: #174f37;
+  --color-gold: #c4a265;
+  --color-gold-2: #8c7040;
+  --color-danger: #8f3d32;
+  --font-sans: "Manrope", "Noto Sans Ethiopic", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", "Noto Serif Ethiopic", ui-serif, georgia, serif;
+  --radius-card: 1.25rem;
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-ivory);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+    line-height: 1.15;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-emerald);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: var(--color-gold);
+    color: var(--color-ink);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.media-frame {
+  aspect-ratio: 3 / 2;
+}
+
+.safe-bottom {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}
+
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+@layer components {
+  .field { display: grid; gap: .45rem; font-size: .82rem; font-weight: 700; color: var(--color-ink); }
+  .field input, .field select, .field textarea { width: 100%; min-height: 3rem; border: 1px solid var(--color-line-soft); border-radius: .95rem; background: white; padding: .75rem .9rem; font: inherit; font-weight: 500; color: var(--color-ink); outline: none; transition: border-color .18s ease, box-shadow .18s ease; }
+  .field textarea { min-height: 8rem; resize: vertical; }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--color-emerald); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-emerald) 16%, transparent); }
+  .chip { min-height: 2.65rem; border: 1px solid var(--color-line-soft); border-radius: 999px; background: var(--color-card); padding: .55rem .8rem; font-size: .75rem; font-weight: 800; }
+  .chip:hover { border-color: var(--color-gold); }
+}
+
+@media (max-width: 640px) {
+  .media-frame { aspect-ratio: 1.15 / 1; }
+  body { overflow-x: hidden; }
+}
