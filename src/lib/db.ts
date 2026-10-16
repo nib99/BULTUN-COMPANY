@@ -111,7 +111,10 @@ async function createPgliteSql(): Promise<Sql> {
   // data survives source edits (it resets on dev-server restart).
   globalRef.__pgliteInstance__ ??= (async () => {
     const { PGlite } = await import("@electric-sql/pglite");
-    const pg = new PGlite({
+    // Memory fallback is intentionally ephemeral. Production must set DATABASE_URL.
+    // Using memory:// also prevents serverless deployments from trying to open
+    // /var/task/_libs/pglite.data, which is read-only/non-persistent on Vercel.
+    const pg = new PGlite("memory://", {
       parsers: {
         [OID_INT8]: Number,
         [OID_DATE]: identity,
