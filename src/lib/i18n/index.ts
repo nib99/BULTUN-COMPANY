@@ -22,7 +22,7 @@ export function dict(locale: Locale): Dict {
   return ALL[locale];
 }
 
-export const LOCALE_STORAGE_KEY = "dalala-locale";
+export const LOCALE_STORAGE_KEY = "bultum-locale";
 
 export function rememberLocale(locale: Locale) {
   try {
