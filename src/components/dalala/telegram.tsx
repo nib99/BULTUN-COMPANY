@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import type { Locale } from "@/lib/i18n";
 import { checkTelegramLaunch, linkTelegramIdentity, type TelegramAuthResult } from "@/lib/telegram/api";
 
-const RESULT_KEY = "dalala-tg-result";
+const RESULT_KEY = "bultum-tg-result";
 
 type WebApp = NonNullable<NonNullable<Window["Telegram"]>["WebApp"]>;
 
@@ -49,7 +49,7 @@ function loadScript() {
       resolve();
       return;
     }
-    const existing = document.querySelector<HTMLScriptElement>("script[data-dalala-tg]");
+    const existing = document.querySelector<HTMLScriptElement>("script[data-bultum-tg]");
     if (existing) {
       existing.addEventListener("load", () => resolve(), { once: true });
       existing.addEventListener("error", () => resolve(), { once: true });
@@ -58,7 +58,7 @@ function loadScript() {
     const script = document.createElement("script");
     script.src = "https://telegram.org/js/telegram-web-app.js";
     script.async = true;
-    script.dataset.dalalaTg = "1";
+    script.dataset.bultumTg = "1";
     script.onload = () => resolve();
     script.onerror = () => resolve();
     document.head.appendChild(script);
@@ -98,7 +98,7 @@ export function TelegramBridge({ locale }: { locale: Locale }) {
         }
         const start = app.initDataUnsafe?.start_param;
         if (typeof start === "string" && /^l_[a-z0-9-]{4,80}$/.test(start)) {
-          const key = "dalala-start";
+          const key = "bultum-start";
           if (sessionStorage.getItem(key) !== start) {
             sessionStorage.setItem(key, start);
             void navigate({

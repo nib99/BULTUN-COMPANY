@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowUpRight, MapPin } from "lucide-react";
+import { ArrowUpRight, BadgeCheck, MapPin } from "lucide-react";
 import { dict, type Locale } from "@/lib/i18n";
 import type { ListingCard } from "@/lib/marketplace/api";
 import { cityName, PriceTag } from "./chrome";
@@ -18,6 +18,7 @@ export function ListingCardView({ item, locale }: { item: ListingCard; locale: L
           <div className="flex items-start justify-between gap-3"><h3 className="line-clamp-2 font-display text-xl text-ink">{item.title}</h3><ArrowUpRight className="mt-1 size-4 shrink-0 text-muted transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-emerald" /></div>
           <PriceTag santim={item.priceSantim} locale={locale} featured={false} />
           <p className="flex items-center gap-1 text-sm text-muted"><MapPin className="size-3.5" />{cityName(locale, item.city)}{item.mileageKm !== null ? ` · ${item.mileageKm.toLocaleString()} km` : item.hours !== null ? ` · ${item.hours.toLocaleString()} h` : ""}</p>
+          <p className="flex items-center gap-1 text-xs font-bold text-muted">{item.sellerName}{item.sellerVerified ? <BadgeCheck className="size-3.5 text-[#0b5cab]" /> : null}</p>
         </div>
       </Link>
     </article>

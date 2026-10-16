@@ -4,8 +4,9 @@ import { dict, type Locale } from "@/lib/i18n";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { RedirectToSignIn } from "@/lib/auth/gates";
 import { CATEGORIES, CITIES } from "@/lib/marketplace/status";
-import { createDraft, listMine, setListingStatus, type ListingCard } from "@/lib/marketplace/api";
+import { attachListingMedia, createDraft, listMine, setListingStatus, type ListingCard } from "@/lib/marketplace/api";
 import { btnGhost, btnPrimary, cityName, PriceTag } from "./chrome";
+import { MediaUploader, type UploadedMedia } from "./media-uploader";
 
 export function SellDesk({ locale }: { locale: Locale }) {
   const { user, isPending } = useCurrentUserState();
@@ -21,6 +22,7 @@ function SellBody({ locale }: { locale: Locale }) {
   const [pending, setPending] = useState(false);
   const [category, setCategory] = useState<(typeof CATEGORIES)[number]>("cars");
   const [tick, setTick] = useState(0);
+  const [media, setMedia] = useState<UploadedMedia[]>([]);
   const heavy = category === "machinery" || category === "agriculture";
 
   useEffect(() => {
@@ -58,8 +60,10 @@ function SellBody({ locale }: { locale: Locale }) {
           hours: heavy ? (hours ? Number(hours) : null) : null,
         },
       });
+      if (media.length) await attachListingMedia({ data: { listingId: created.id, media } });
       if (review) await setListingStatus({ data: { id: created.id, to: "pending" } });
       form.reset();
+      setMedia([]);
       setNote(review ? copy.sell.submitted : copy.sell.saved);
       refresh();
     } catch (error) {
@@ -108,6 +112,7 @@ function SellBody({ locale }: { locale: Locale }) {
         </div>
         <label className="field"><span>{copy.sell.titleField}</span><input name="title" required minLength={4} maxLength={80} placeholder="2019 Toyota Land Cruiser Prado TXL" /></label>
         <label className="field"><span>{copy.sell.summary}</span><textarea name="summary" required minLength={10} maxLength={600} rows={5} placeholder="Condition, ownership, service history, location, and important buyer information…" /></label>
+        <MediaUploader value={media} onChange={setMedia} />
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <button type="submit" disabled={pending} className={btnPrimary}>{pending ? <Loader2 className="mr-2 size-4 animate-spin" /> : <PlusCircle className="mr-2 size-4" />}{copy.sell.submitReview}</button>
           <button type="button" disabled={pending} className={btnGhost} onClick={(event) => { const form = event.currentTarget.form; if (form) void submit(form, false); }}>{copy.sell.submit}</button>

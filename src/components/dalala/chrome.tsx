@@ -9,25 +9,7 @@ export const btnGhost =
   "inline-flex min-h-11 items-center justify-center rounded-full border border-line-soft bg-card px-5 text-sm font-semibold text-ink transition-colors hover:border-gold";
 
 export function Mark({ className = "size-10" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 96 96" className={className} role="img" aria-label="BULTUM COMPANY logo">
-      <defs>
-        <linearGradient id="bultumGold" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0" stopColor="#FFD83D" />
-          <stop offset="1" stopColor="#F0A900" />
-        </linearGradient>
-      </defs>
-      <rect x="2" y="2" width="92" height="92" rx="26" fill="#061A33" />
-      <circle cx="48" cy="46" r="35" fill="none" stroke="url(#bultumGold)" strokeWidth="6" strokeDasharray="7 5" />
-      <path d="M30 25h17c11 0 18 7 18 18s-7 18-18 18h-8v10H30V25Zm9 9v18h7c5.5 0 9-3.1 9-9s-3.5-9-9-9h-7Z" fill="white" />
-      <path d="m49 62 12-16 6 5-12 17-9 2 3-8Z" fill="url(#bultumGold)" />
-      <path d="M59 49 69 38l7 2-11 14-6-5Z" fill="#FFD83D" />
-      <path d="m69 38 9 2 7-6-4-5-10 4-2 5Z" fill="#F0A900" />
-      <path d="M63 54h12l7 6-2 6H59l4-12Z" fill="#F0A900" />
-      <circle cx="65" cy="69" r="5" fill="#061A33" stroke="#FFD83D" strokeWidth="3" />
-      <circle cx="78" cy="69" r="5" fill="#061A33" stroke="#FFD83D" strokeWidth="3" />
-    </svg>
-  );
+  return <img src="/icons/bultum-icon.svg" className={`${className} rounded-2xl object-contain`} alt="BULTUM COMPANY" />;
 }
 
 const CODES: Record<Locale, string> = { en: "EN", om: "OM", am: "AM", so: "SO" };

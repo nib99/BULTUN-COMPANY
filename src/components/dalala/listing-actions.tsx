@@ -5,8 +5,10 @@ import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { dict, type Locale } from "@/lib/i18n";
 import { ownsListing, listSaved, sendInquiry, sendReport, toggleFavorite } from "@/lib/marketplace/api";
 import { btnGhost, btnPrimary } from "./chrome";
+import { COMPANY_PHONE } from "@/lib/company";
+import { ReminderButton } from "./reminder-button";
 
-const SAVED_KEY = "dalala-saved";
+const SAVED_KEY = "bultum-saved";
 
 function readSaved() {
   try {
@@ -30,11 +32,15 @@ export function ListingActions({
   listingId,
   title,
   isDemo,
+  sellerWhatsApp,
+  sellerPhone,
 }: {
   locale: Locale;
   listingId: string;
   title: string;
   isDemo: boolean;
+  sellerWhatsApp?: string;
+  sellerPhone?: string;
 }) {
   const copy = dict(locale);
   const { user, isPending } = useCurrentUserState();
@@ -81,8 +87,29 @@ export function ListingActions({
     };
   }, [copy.listing.inquire, owns]);
 
+  const contactNumber = (sellerWhatsApp || COMPANY_PHONE).replace(/\D/g, "");
+  const displayNumber = sellerWhatsApp || COMPANY_PHONE;
+  const whatsappMessage = `Hello BULTUM COMPANY, I am interested in ${title}. Listing: ${window.location.href}`;
+
   return (
     <div className="space-y-6">
+      <div className="grid gap-2 sm:grid-cols-2">
+        <a
+          href={`https://wa.me/${contactNumber}?text=${encodeURIComponent(whatsappMessage)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#25D366] px-5 text-sm font-black text-white shadow-sm transition hover:brightness-95"
+        >
+          {copy.listing.whatsapp} · {displayNumber}
+        </a>
+        <a
+          href={`tel:${(sellerPhone || COMPANY_PHONE).replace(/\s/g, "")}`}
+          className={btnGhost}
+        >
+          {copy.listing.callOwner}
+        </a>
+      </div>
+      <ReminderButton locale={locale} listingId={listingId} title={title} label={copy.listing.remind} setLabel={copy.listing.setReminder} updateLabel={copy.listing.updateReminder} hint={copy.listing.reminderHint} invalidText={copy.listing.reminderFuture} blockedText={copy.listing.reminderBlocked} successText={copy.listing.reminderSet} />
       <div className="flex flex-wrap gap-2">
         <button
           type="button"
