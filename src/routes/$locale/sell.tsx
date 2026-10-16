@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SellDesk } from "@/components/dalala/sell-form";
+import { SellDesk } from "@/components/bultum/sell-form";
 import { dict } from "@/lib/i18n";
 
 export const Route = createFileRoute("/$locale/sell")({

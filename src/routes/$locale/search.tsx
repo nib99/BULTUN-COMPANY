@@ -2,8 +2,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { dict } from "@/lib/i18n";
 import { searchListings } from "@/lib/marketplace/api";
 import { CATEGORIES, CITIES, isCategory, isCity } from "@/lib/marketplace/status";
-import { btnPrimary, cityName } from "@/components/dalala/chrome";
-import { ListingCardView } from "@/components/dalala/listing-card";
+import { btnPrimary, cityName } from "@/components/bultum/chrome";
+import { ListingCardView } from "@/components/bultum/listing-card";
 
 type SearchIn = {
   q: string;

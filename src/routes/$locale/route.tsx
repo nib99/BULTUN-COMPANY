@@ -1,7 +1,7 @@
 import { createFileRoute, notFound, Outlet } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { BottomNav, TopBar } from "@/components/dalala/chrome";
-import { TelegramBridge } from "@/components/dalala/telegram";
+import { BottomNav, TopBar } from "@/components/bultum/chrome";
+import { TelegramBridge } from "@/components/bultum/telegram";
 import { dict, isLocale } from "@/lib/i18n";
 
 export const Route = createFileRoute("/$locale")({

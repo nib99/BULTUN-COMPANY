@@ -5,8 +5,10 @@ import { AUTH_PROVIDERS, signIn } from "@/lib/auth/client";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { dict, TRANSLATION_REVIEW } from "@/lib/i18n";
 import { accountFacts, listInquiries } from "@/lib/marketplace/api";
-import { btnPrimary } from "@/components/dalala/chrome";
-import { readTelegramResult } from "@/components/dalala/telegram";
+import { btnPrimary } from "@/components/bultum/chrome";
+import { readTelegramResult } from "@/components/bultum/telegram";
+import { SellerProfileEditor } from "@/components/bultum/seller-profile";
+import { PushNotifications } from "@/components/bultum/push-notifications";
 import type { TelegramAuthResult } from "@/lib/telegram/api";
 
 export const Route = createFileRoute("/$locale/account")({ component: AccountPage });
@@ -88,6 +90,17 @@ function AccountPage() {
           </p>
         </section>
       ) : null}
+      {user ? <SellerProfileEditor locale={locale} /> : null}
+      {user ? (
+        <section className="space-y-3 rounded-card border border-line-soft bg-card p-5">
+          <div><h2 className="font-display text-2xl">BULTUM notifications</h2><p className="mt-1 text-sm text-muted">Get instant alerts when a buyer sends an inquiry about your listing, even when the app is not open.</p></div>
+          <PushNotifications />
+        </section>
+      ) : null}
+      <section className="rounded-card border border-line-soft bg-card p-4">
+        <h2 className="font-display text-2xl">{copy.listing.remind}</h2>
+        <p className="mt-2 text-sm text-muted">BULTUM can remind you about vehicles and machinery you plan to revisit. Allow browser notifications when you set a reminder.</p>
+      </section>
       <section className="space-y-2">
         <h2 className="font-display text-2xl">{copy.account.language}</h2>
         {TRANSLATION_REVIEW.includes(locale) ? <p className="text-sm text-muted">{copy.account.review}</p> : null}
