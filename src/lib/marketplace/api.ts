@@ -41,16 +41,41 @@ export type ListingCard = {
   featured: boolean;
   isDemo: boolean;
   status: ListingStatus;
+  sellerName: string;
+  sellerVerified: boolean;
 };
 
 export type ListingDetail = ListingCard & {
   seller: {
+    userId: string;
     displayName: string;
     city: string;
     kind: "individual" | "dealer";
     isDemo: boolean;
+    verified: boolean;
+    verificationStatus: string;
+    phone: string;
+    whatsapp: string;
+    website: string;
+    bio: string;
+    logoUrl: string;
   };
+  media: { id: string; kind: "image" | "video"; url: string; sortOrder: number }[];
   owns: boolean;
+};
+
+export type SellerProfile = {
+  userId: string;
+  displayName: string;
+  city: string;
+  kind: "individual" | "dealer";
+  bio: string;
+  phone: string;
+  whatsapp: string;
+  website: string;
+  logoUrl: string;
+  verified: boolean;
+  verificationStatus: "unverified" | "pending" | "verified";
 };
 
 type Raw = {
@@ -70,14 +95,19 @@ type Raw = {
   featured: boolean;
   is_demo: boolean;
   status: string;
+  seller_user_id?: string;
+  seller_name?: string;
+  seller_verified?: boolean;
 };
 
 const CARD_SQL = `
   select l.id, l.category, l.condition, l.price_santim, l.city, l.year, l.make, l.model,
          l.mileage_km, l.hours, l.cover_path, l.featured, l.is_demo, l.status,
          coalesce(pref.title, src.title) as title,
-         coalesce(pref.summary, src.summary) as summary
+         coalesce(pref.summary, src.summary) as summary,
+         s.user_id as seller_user_id, s.display_name as seller_name, s.verified as seller_verified
   from listings l
+  join seller_profiles s on s.user_id = l.seller_user_id
   join listing_translations src on src.listing_id = l.id and src.locale = l.source_locale
   left join listing_translations pref on pref.listing_id = l.id and pref.locale = $1
 `;
@@ -102,6 +132,8 @@ function mapCard(row: Raw): ListingCard {
     featured: Boolean(row.featured),
     isDemo: Boolean(row.is_demo),
     status,
+    sellerName: row.seller_name ?? "Seller",
+    sellerVerified: Boolean(row.seller_verified),
   };
 }
 
@@ -220,15 +252,24 @@ export const getListing = createServerFn({ method: "GET" })
     const sql = await db();
     const rows = await sql.query<
       Raw & {
+        seller_user_id: string;
         seller_name: string;
         seller_city: string;
         seller_kind: string;
         seller_demo: boolean;
+        seller_verified: boolean;
+        seller_verification_status: string;
+        seller_phone: string;
+        seller_whatsapp: string;
+        seller_website: string;
+        seller_bio: string;
+        seller_logo_url: string;
       }
     >(
-      `${CARD_SQL.replace("from listings l", `, s.display_name as seller_name, s.city as seller_city, s.kind as seller_kind, s.is_demo as seller_demo
+      `${CARD_SQL.replace("from listings l", `, s.city as seller_city, s.kind as seller_kind, s.is_demo as seller_demo,
+        s.verification_status as seller_verification_status, s.phone as seller_phone,
+        s.whatsapp as seller_whatsapp, s.website as seller_website, s.bio as seller_bio, s.logo_url as seller_logo_url
         from listings l`)}
-       join seller_profiles s on s.user_id = l.seller_user_id
        where l.id = $2 and l.status in ('published', 'sold')`,
       [data.locale, data.id],
     );
@@ -243,8 +284,38 @@ export const getListing = createServerFn({ method: "GET" })
         city: row.seller_city,
         kind: row.seller_kind === "dealer" ? "dealer" : "individual",
         isDemo: Boolean(row.seller_demo),
+        verified: Boolean(row.seller_verified),
+        verificationStatus: row.seller_verification_status,
+        phone: row.seller_phone ?? "",
+        whatsapp: row.seller_whatsapp ?? "",
+        website: row.seller_website ?? "",
+        bio: row.seller_bio ?? "",
+        logoUrl: row.seller_logo_url ?? "",
+        userId: row.seller_user_id,
       },
+      media: await sql<{ id: string; kind: "image" | "video"; url: string; sort_order: number }>`
+        select id, kind, url, sort_order from listing_media where listing_id = ${data.id} order by sort_order asc, created_at asc
+      `.then((media) => media.map((item) => ({ id: item.id, kind: item.kind, url: item.url, sortOrder: Number(item.sort_order) }))),
     } satisfies ListingDetail;
+  });
+
+
+export const getSellerProfile = createServerFn({ method: "GET" })
+  .validator((input: unknown) => z.object({ locale: localeSchema, userId: z.string().min(1).max(120) }).parse(input))
+  .handler(async ({ data }) => {
+    const sql = await db();
+    const profiles = await sql<SellerProfile>`
+      select user_id as "userId", display_name as "displayName", city, kind, bio, phone, whatsapp,
+             website, logo_url as "logoUrl", verified, verification_status as "verificationStatus"
+      from seller_profiles where user_id = ${data.userId} and is_demo = false
+    `;
+    const profile = profiles[0];
+    if (!profile) return null;
+    const rows = await sql.query<Raw>(
+      `${CARD_SQL} where l.seller_user_id = $2 and l.status in ('published', 'sold') order by l.featured desc, l.created_at desc limit 60`,
+      [data.locale, data.userId],
+    );
+    return { profile, items: rows.map(mapCard) };
   });
 
 export const listingsByIds = createServerFn({ method: "GET" })
@@ -293,7 +364,7 @@ export const createDraft = createServerFn({ method: "POST" })
       insert into seller_profiles (user_id, display_name, city, kind, is_demo)
       values (${context.userId}, ${data.displayName}, ${data.city}, 'individual', false)
       on conflict (user_id) do update
-        set display_name = excluded.display_name, city = excluded.city
+        set display_name = excluded.display_name, city = excluded.city, updated_at = now()
     `;
     const id = crypto.randomUUID();
     const heavy = data.category === "machinery" || data.category === "agriculture";
@@ -393,6 +464,31 @@ export const sendInquiry = createServerFn({ method: "POST" })
       insert into inquiries (id, listing_id, buyer_user_id, message)
       values (${id}, ${data.listingId}, ${context.userId}, ${data.message})
     `;
+
+    const listingMeta = await sql<{ seller_user_id: string; title: string }>`
+      select l.seller_user_id, coalesce(t.title, l.make || 'listing') as title
+      from listings l
+      left join listing_translations t on t.listing_id = l.id and t.locale = l.source_locale
+      where l.id = ${data.listingId}
+    `;
+    const sellerId = listingMeta[0]?.seller_user_id;
+    const title = listingMeta[0]?.title ?? "BULTUM listing";
+    if (sellerId) {
+      const buyer = await sql<{ name: string; email: string }>`
+        select coalesce("name", 'Buyer') as name, coalesce(email, '') as email from "user" where id = ${context.userId}
+      `;
+      const buyerName = buyer[0]?.name ?? "Buyer";
+      const baseUrl = process.env.APP_PUBLIC_URL?.trim() || "";
+      const url = baseUrl ? `${baseUrl}/en/l/${data.listingId}` : `/en/l/${data.listingId}`;
+      await Promise.allSettled([
+        import("@/lib/notifications").then(({ notifyUser }) =>
+          notifyUser(sellerId, `New BULTUM inquiry: ${title}`, `${buyerName}: ${data.message.slice(0, 180)}`, url),
+        ),
+        import("@/lib/notification-channels").then(({ notifyInquiryChannels }) =>
+          notifyInquiryChannels({ sellerUserId: sellerId, buyerName, buyerEmail: buyer[0]?.email ?? "", title, message: data.message, url }),
+        ),
+      ]);
+    }
     return { id };
   });
 
@@ -509,6 +605,102 @@ export const accountFacts = createServerFn({ method: "POST" })
       roles: roles.map((row) => row.role),
       hasSeller: Number(seller[0]?.n ?? 0) > 0,
     };
+  });
+
+
+const sellerProfileSchema = z.object({
+  displayName: z.string().trim().min(2).max(80),
+  city: citySchema,
+  kind: z.enum(["individual", "dealer"]),
+  bio: z.string().trim().max(800).default(""),
+  phone: z.string().trim().max(30).default(""),
+  whatsapp: z.string().trim().max(30).default(""),
+  website: z.string().trim().max(160).default(""),
+  logoUrl: z.string().url().max(2000).or(z.literal("")),
+});
+
+export const getMySellerProfile = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    const sql = await db();
+    const rows = await sql<SellerProfile>`
+      select user_id as "userId", display_name as "displayName", city, kind, bio, phone, whatsapp,
+             website, logo_url as "logoUrl", verified, verification_status as "verificationStatus"
+      from seller_profiles where user_id = ${context.userId} and is_demo = false
+    `;
+    return rows[0] ?? null;
+  });
+
+export const updateSellerProfile = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((input: unknown) => sellerProfileSchema.parse(input))
+  .handler(async ({ data, context }) => {
+    const sql = await db();
+    await sql`
+      insert into seller_profiles (user_id, display_name, city, kind, bio, phone, whatsapp, website, logo_url, is_demo)
+      values (${context.userId}, ${data.displayName}, ${data.city}, ${data.kind}, ${data.bio}, ${data.phone}, ${data.whatsapp}, ${data.website}, ${data.logoUrl}, false)
+      on conflict (user_id) do update set
+        display_name = excluded.display_name,
+        city = excluded.city,
+        kind = excluded.kind,
+        bio = excluded.bio,
+        phone = excluded.phone,
+        whatsapp = excluded.whatsapp,
+        website = excluded.website,
+        logo_url = excluded.logo_url,
+        updated_at = now()
+    `;
+    return { ok: true as const };
+  });
+
+export const requestSellerVerification = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    const sql = await db();
+    const rows = await sql<{ user_id: string }>`select user_id from seller_profiles where user_id = ${context.userId} and is_demo = false`;
+    if (!rows.length) throw new Error("profile_required");
+    await sql`update seller_profiles set verification_status = 'pending', updated_at = now() where user_id = ${context.userId}`;
+    return { ok: true as const };
+  });
+
+export const attachListingMedia = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((input: unknown) => z.object({
+    listingId: z.string().regex(/^[a-z0-9-]{4,80}$/),
+    media: z.array(z.object({
+      kind: z.enum(["image", "video"]),
+      url: z.string().url().max(3000),
+      publicId: z.string().max(500).default(""),
+    })).max(21),
+  }).parse(input))
+  .handler(async ({ data, context }) => {
+    const sql = await db();
+    const owned = await sql<{ id: string }>`select id from listings where id = ${data.listingId} and seller_user_id = ${context.userId}`;
+    if (!owned.length) throw new Error("forbidden");
+    await sql`delete from listing_media where listing_id = ${data.listingId}`;
+    for (let index = 0; index < data.media.length; index += 1) {
+      const item = data.media[index];
+      await sql`
+        insert into listing_media (id, listing_id, kind, url, public_id, sort_order)
+        values (${crypto.randomUUID()}, ${data.listingId}, ${item.kind}, ${item.url}, ${item.publicId}, ${index})
+      `;
+    }
+    const firstImage = data.media.find((item) => item.kind === "image");
+    if (firstImage) {
+      await sql`update listings set cover_path = ${firstImage.url}, updated_at = now() where id = ${data.listingId}`;
+    }
+    return { ok: true as const };
+  });
+
+export const setSellerVerification = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((input: unknown) => z.object({ userId: z.string().min(1), verified: z.boolean() }).parse(input))
+  .handler(async ({ data, context }) => {
+    const sql = await db();
+    const roles = await sql<{ role: string }>`select role from role_assignments where user_id = ${context.userId}`;
+    if (!roles.some((row) => ["admin", "super_admin", "platform_owner", "moderator"].includes(row.role))) throw new Error("forbidden");
+    await sql`update seller_profiles set verified = ${data.verified}, verification_status = ${data.verified ? "verified" : "unverified"}, updated_at = now() where user_id = ${data.userId}`;
+    return { ok: true as const };
   });
 
 export const ownsListing = createServerFn({ method: "POST" })
