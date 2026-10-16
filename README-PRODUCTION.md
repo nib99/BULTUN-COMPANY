@@ -1,53 +1,144 @@
-# DALALA Motors & Machinery — production blueprint
+# BULTUM COMPANY — production deployment
 
-## Product
-Mobile-first Ethiopian marketplace for cars, trucks, heavy machinery and agricultural machinery. Primary UI languages: English, Afaan Oromoo and Amharic. Telegram is supported as a Mini App entry point, listing-share channel and verified identity-linking channel.
+BULTUM COMPANY is a mobile-first Ethiopian marketplace for cars, trucks, heavy machinery and agricultural equipment.
 
-## Required production environment
+## Production stack
 
-- `DATABASE_URL` — production PostgreSQL/Neon connection string
-- `BETTER_AUTH_URL` — exact public HTTPS origin
-- `VITE_AUTH_ENABLED=true`
-- `GROK_AUTH_ISSUER`, `GROK_AUTH_CLIENT_ID`, `GROK_AUTH_CLIENT_SECRET` — production authentication broker values used by this workspace
-- `TELEGRAM_BOT_TOKEN`
-- `TELEGRAM_WEBHOOK_SECRET`
-- `APP_PUBLIC_URL` — public HTTPS URL used in Telegram buttons
-- `TELEGRAM_WEBHOOK_URL` — `${APP_PUBLIC_URL}/api/telegram/webhook`
+- Vite + React + TanStack Router
+- Better Auth
+- PostgreSQL (Neon or another managed PostgreSQL provider)
+- Google OAuth
+- Email/password authentication
+- Telegram Bot + Telegram Mini App
+- PWA install on Android/iOS browsers
+- English, Afaan Oromoo and Amharic UI
+- Vercel deployment
 
-Do not commit secrets. Add them to Vercel Project Settings → Environment Variables.
+## Required Vercel environment variables
 
-## Deploy
+```text
+DATABASE_URL=postgresql://...
+BETTER_AUTH_URL=https://your-domain.example
+BETTER_AUTH_SECRET=generate-a-long-random-secret
+VITE_AUTH_ENABLED=true
 
-1. Push this folder to GitHub.
-2. Import the repository into Vercel.
-3. Select the Vite project. `vercel.json` already uses `npm ci --include=dev --no-audit --no-fund` and `npm run build`.
-4. Add all production environment variables.
-5. Deploy.
-6. Verify `https://YOUR-DOMAIN/api/health`.
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+
+TELEGRAM_BOT_TOKEN=...
+TELEGRAM_WEBHOOK_SECRET=...
+TELEGRAM_WEBHOOK_URL=https://your-domain.example/api/telegram/webhook
+APP_PUBLIC_URL=https://your-domain.example
+```
+
+Never commit real secrets to GitHub.
+
+## Google OAuth
+
+Create a Google OAuth Web application in Google Cloud Console.
+
+Production callback URL:
+
+```text
+https://your-domain.example/api/auth/callback/google
+```
+
+For a temporary Vercel URL, use that exact HTTPS hostname until the custom domain is connected.
+
+## Email/password
+
+Email/password is enabled in `src/lib/auth/email-password.ts` and is stored by Better Auth in PostgreSQL.
+
+For production password reset and email verification, connect an email delivery provider and add Better Auth's `sendEmail` integration. Basic account creation and sign-in do not require a separate broker.
+
+## Database
+
+Use managed PostgreSQL in production. Run:
+
+```text
+npm run db:migrate
+```
+
+The production build already runs the migration command after the Vite build.
 
 ## Telegram
 
-After the first production deployment:
+After deployment, set the three Telegram values above and run:
 
-```bash
-TELEGRAM_BOT_TOKEN=... \
-TELEGRAM_WEBHOOK_SECRET=... \
-TELEGRAM_WEBHOOK_URL=https://YOUR-DOMAIN/api/telegram/webhook \
-node scripts/configure-telegram.mjs
+```text
+npm run telegram:configure
 ```
 
-The webhook rejects requests without Telegram's configured secret header. The server validates Telegram Mini App `initData` using the bot token, rejects stale payloads, deduplicates update IDs, and can link a verified Telegram identity to the signed-in marketplace account.
+The webhook endpoint is:
 
-For a listing share/deep link, the app can open a Telegram share URL. For Mini App launch links, configure the bot's menu button to the public app URL and use `startapp=l_<listing-id>` when opening a specific listing.
+```text
+/api/telegram/webhook
+```
 
 ## PWA
 
-The app includes a manifest, safe-area mobile navigation and a service worker. HTTPS is required in production for service workers. Android Chrome users can install it from the browser's install/add-to-home-screen flow.
+The app manifest is `/manifest.webmanifest` and the app icons are:
 
-## SEO
+```text
+/bultum-icon-192.png
+/bultum-icon-512.png
+```
 
-The marketplace has locale-aware page titles/descriptions, Open Graph metadata, semantic headings, crawlable listing URLs and lightweight assets. Replace any company-domain placeholders with the real production domain before launch and add a generated sitemap for every public listing/category URL.
+The installed app name is **BULTUM COMPANY** and the short name is **BULTUM**.
 
-## Business production gates
+## Brand
 
-Before accepting real customer money: use a contracted Ethiopian payment provider with server-to-server webhook verification, idempotency, signed callbacks and reconciliation. Do not treat a database `payment_orders` row as proof that money was received. Also add object storage for seller photos, image processing, rate limiting backed by Redis/KV, error monitoring, backups and an admin moderation console.
+The primary product name is **BULTUM COMPANY**. The visual identity uses a bold B + excavator/machinery mark, deep navy, white and construction yellow.
+
+## Media uploads
+
+The current marketplace data model is prepared for listing media metadata. For a full production seller upload pipeline, connect direct-to-object-storage uploads (S3-compatible, Cloudflare R2, Supabase Storage, or another managed object store), validate file size/type server-side, generate thumbnails, and store only media keys/URLs in PostgreSQL.
+
+Do not store large image/video binaries in PostgreSQL or Vercel's application filesystem.
+
+## Commercial marketplace upgrade
+
+This version adds:
+
+- Seller/company profiles with phone, WhatsApp, website, logo, bio and verification state.
+- Verified seller badges on inventory cards and listing pages. Verification is server-controlled; sellers can request review.
+- Real photo/video uploads through signed Cloudinary uploads. Configure `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET`.
+- Up to 20 images and 1 video per listing. Media URLs and ordering are stored in PostgreSQL.
+- Native Web Push subscriptions and server-side encrypted Web Push delivery. Run `npm run generate:vapid` and configure the VAPID variables.
+- Inquiry notifications to linked seller Telegram accounts and the optional `TELEGRAM_OWNER_CHAT_ID`.
+- Optional WhatsApp Business Cloud API template notifications using `WHATSAPP_*` variables. The template must be approved by Meta and contain four body placeholders: buyer name, listing title, message, listing URL.
+- The supplied BULTUM logo/icon assets are used for the browser, PWA manifest, Apple touch icon, notification icon and in-app brand mark.
+
+### Production environment additions
+
+```text
+CLOUDINARY_CLOUD_NAME
+CLOUDINARY_API_KEY
+CLOUDINARY_API_SECRET
+VAPID_PUBLIC_KEY
+VAPID_PRIVATE_KEY
+VAPID_SUBJECT
+VITE_VAPID_PUBLIC_KEY
+TELEGRAM_OWNER_CHAT_ID
+WHATSAPP_OWNER_NUMBER
+WHATSAPP_ACCESS_TOKEN
+WHATSAPP_PHONE_NUMBER_ID
+WHATSAPP_TEMPLATE_NAME
+WHATSAPP_TEMPLATE_LANGUAGE
+WHATSAPP_GRAPH_VERSION
+```
+
+`DATABASE_URL` must point to a real PostgreSQL/Neon database in production. Do not upload `.env` or any secret values to GitHub.
+
+## PWA branding
+
+The supplied uploaded BULTUM assets are installed under both `public/` and `public/icons/` for compatibility. The PWA manifest uses:
+
+- `/icons/bultum-icon-192.png`
+- `/icons/bultum-icon-512.png`
+- `/icons/bultum-icon-180.png` for Apple touch icon
+- `/icons/bultum-icon.svg` for the in-app brand mark
+- `/icons/bultum-logo.svg` for full brand lockups
+- `/icons/favicon.svg` for the browser favicon
+
+After changing an already-installed Android PWA, uninstall the old BULTUM shortcut and reinstall once if Android keeps the previous launcher icon cached.
