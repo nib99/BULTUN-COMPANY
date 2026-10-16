@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { ArrowLeft, CheckCircle2, Eye, EyeOff, Mail, ShieldCheck, UserRound } from "lucide-react";
-import { Mark, btnPrimary } from "@/components/dalala/chrome";
+import { btnPrimary } from "@/components/bultum/chrome";
 import { authEnabled, signIn, signInWithEmail, signUpWithEmail } from "@/lib/auth/client";
 import { dict } from "@/lib/i18n";
 
@@ -63,7 +63,7 @@ function Login() {
         <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_20px_70px_rgba(15,23,42,.10)]">
           <div className="bg-[linear-gradient(135deg,#071a33,#0b3b69_58%,#f3b700)] px-6 pb-8 pt-7 text-white">
             <div className="flex items-center gap-3">
-              <div className="rounded-2xl bg-white p-1.5 shadow-lg"><Mark className="size-14" /></div>
+              <div className="rounded-2xl bg-white p-2 shadow-lg"><img src="/icons/bultum-logo.svg" alt="BULTUM COMPANY — Cars & Machinery" className="h-16 w-16 rounded-xl object-contain" /></div>
               <div>
                 <p className="text-2xl font-black tracking-tight">BULTUM COMPANY</p>
                 <p className="text-sm font-semibold text-white/80">Cars & Machinery</p>
