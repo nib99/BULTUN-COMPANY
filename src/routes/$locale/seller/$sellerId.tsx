@@ -2,8 +2,8 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { BadgeCheck, Globe, Phone, MessageCircle } from "lucide-react";
 import { getSellerProfile } from "@/lib/marketplace/api";
 import { dict } from "@/lib/i18n";
-import { cityName } from "@/components/bultum/chrome";
-import { ListingCardView } from "@/components/bultum/listing-card";
+import { cityName } from "@/components/dalala/chrome";
+import { ListingCardView } from "@/components/dalala/listing-card";
 
 export const Route = createFileRoute("/$locale/seller/$sellerId")({
   loader: async ({ params }) => {
