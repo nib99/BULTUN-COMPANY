@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ListingCardView } from "@/components/bultum/listing-card";
-import { readLocalSaved } from "@/components/bultum/listing-actions";
+import { ListingCardView } from "@/components/dalala/listing-card";
+import { readLocalSaved } from "@/components/dalala/listing-actions";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { dict } from "@/lib/i18n";
 import { listSaved, listingsByIds, type ListingCard } from "@/lib/marketplace/api";
