@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { BadgeCheck, ExternalLink, Phone } from "lucide-react";
-import { ListingActions } from "@/components/bultum/listing-actions";
-import { cityName, PriceTag } from "@/components/bultum/chrome";
+import { ListingActions } from "@/components/dalala/listing-actions";
+import { cityName, PriceTag } from "@/components/dalala/chrome";
 import { dict } from "@/lib/i18n";
 import { getListing } from "@/lib/marketplace/api";
 
