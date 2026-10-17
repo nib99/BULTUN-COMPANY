@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { dict } from "@/lib/i18n";
 import { searchListings } from "@/lib/marketplace/api";
 import { isCategory } from "@/lib/marketplace/status";
-import { ListingCardView } from "@/components/bultum/listing-card";
+import { ListingCardView } from "@/components/dalala/listing-card";
 
 export const Route = createFileRoute("/$locale/c/$category")({
   beforeLoad: ({ params }) => {
