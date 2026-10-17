@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Mark } from "@/components/bultum/chrome";
+import { Mark } from "@/components/dalala/chrome";
 import { dict, isLocale, LOCALE_STORAGE_KEY, rememberLocale, type Locale } from "@/lib/i18n";
 
 export const Route = createFileRoute("/")({ component: Door });
