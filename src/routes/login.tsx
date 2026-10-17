@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { ArrowLeft, CheckCircle2, Eye, EyeOff, Mail, ShieldCheck, UserRound } from "lucide-react";
-import { btnPrimary } from "@/components/bultum/chrome";
+import { btnPrimary } from "@/components/dalala/chrome";
 import { authEnabled, signIn, signInWithEmail, signUpWithEmail } from "@/lib/auth/client";
 import { dict } from "@/lib/i18n";
 
