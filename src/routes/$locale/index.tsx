@@ -3,9 +3,9 @@ import { ArrowRight, Bell, Building2, CarFront, ChevronRight, CircleUserRound, S
 import { dict, isLocale } from "@/lib/i18n";
 import { getYard } from "@/lib/marketplace/api";
 import { CATEGORIES } from "@/lib/marketplace/status";
-import { btnPrimary } from "@/components/bultum/chrome";
-import { ListingCardView } from "@/components/bultum/listing-card";
-import { Mark } from "@/components/bultum/chrome";
+import { btnPrimary } from "@/components/dalala/chrome";
+import { ListingCardView } from "@/components/dalala/listing-card";
+import { Mark } from "@/components/dalala/chrome";
 
 const PHOTOS = { cars: "/media/land-cruiser.jpg", trucks: "/media/truck.jpg", machinery: "/media/excavator.jpg", agriculture: "/media/tractor.jpg" } as const;
 const CATEGORY_ICONS = { cars: CarFront, trucks: Truck, machinery: Building2, agriculture: Tractor } as const;
