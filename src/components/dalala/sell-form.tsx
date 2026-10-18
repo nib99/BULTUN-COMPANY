@@ -14,7 +14,22 @@ export function SellDesk({ locale }: { locale: Locale }) {
   if (!user) return <RedirectToSignIn />;
   return <SellBody locale={locale} />;
 }
+import { useTelegramMainButton, tgHaptic } from "./telegram";
 
+// inside SellBody / the form component:
+useTelegramMainButton({
+  label: pending ? "Saving…" : "Publish listing",
+  enabled: !pending,
+  progress: pending,
+  onPress: () => {
+    // trigger the same submit logic you already have
+    // e.g. formRef.current?.requestSubmit()
+    // or call your submit() function
+  },
+});
+
+// after successful publish:
+tgHaptic("success");
 function SellBody({ locale }: { locale: Locale }) {
   const copy = dict(locale);
   const [items, setItems] = useState<ListingCard[] | null>(null);
