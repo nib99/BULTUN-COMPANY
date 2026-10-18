@@ -30,7 +30,19 @@
   --font-display: "Fraunces", "Noto Serif Ethiopic", ui-serif, georgia, serif;
   --radius-card: 1.25rem;
 }
+/* Telegram Mini App safe areas */
+.safe-top {
+  padding-top: max(0.75rem, env(safe-area-inset-top, 0px));
+}
+.safe-bottom {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+}
 
+/* When running inside Telegram, use the theme variables */
+html[data-tg-theme="dark"] body {
+  background-color: var(--tg-bg, #0f0e0c);
+  color: var(--tg-text, #f4efe6);
+}
 @layer base {
   button:not(:disabled),
   [role="button"]:not(:disabled) {
