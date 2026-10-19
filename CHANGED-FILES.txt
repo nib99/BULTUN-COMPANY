@@ -1,0 +1,17 @@
+BULTUM COMPANY image replacement patch
+
+New files:
+- public/marketplace/byd-white.jpg
+- public/marketplace/byd-gray.jpg
+- public/marketplace/hitachi-1.jpg
+- public/marketplace/hitachi-2.jpg
+- migrations/0004_replace_demo_listing_media.sql
+
+The migration replaces published demo listing cover/gallery media by category:
+- Cars -> the two supplied BYD photos
+- Machinery/Agriculture -> the two supplied Hitachi photos
+
+It does not delete listing records or seller data.
+After deploying the files, run the normal database migration command:
+  npm run db:migrate
+Then refresh the Vercel site. If the old images remain in the browser/PWA, hard-refresh or reinstall the PWA once.
