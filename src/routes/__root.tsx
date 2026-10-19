@@ -2,6 +2,7 @@ import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-r
 import { AuthProvider } from "@/lib/auth/provider";
 import { useEffect } from "react";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
+import { DalalaContactHub } from "@/components/dalala/contact-ai";
 import appCss from "../styles.css?url";
 
 function PwaBoot() {
@@ -40,6 +41,7 @@ export const Route = createRootRoute({
         <PreviewHostBridge />
         <AuthProvider>
           <Outlet />
+          <DalalaContactHub />
         </AuthProvider>
         <Scripts />
       </body>

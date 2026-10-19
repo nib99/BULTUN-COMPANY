@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { BadgeCheck, ExternalLink, Phone } from "lucide-react";
 import { ListingActions } from "@/components/dalala/listing-actions";
+import { DalalaAiButton } from "@/components/dalala/contact-ai";
 import { cityName, PriceTag } from "@/components/dalala/chrome";
 import { dict } from "@/lib/i18n";
 import { getListing } from "@/lib/marketplace/api";
@@ -78,6 +79,24 @@ function Detail() {
           <p className="mt-1 text-sm font-semibold text-ink">Contact the company owner directly to ask about this vehicle or machine.</p>
         </div>
         <ListingActions locale={locale} listingId={listing.id} title={listing.title} isDemo={listing.isDemo} sellerWhatsApp={listing.seller.whatsapp} sellerPhone={listing.seller.phone} />
+        <DalalaAiButton
+          locale={locale}
+          listing={{
+            id: listing.id,
+            title: listing.title,
+            category: listing.category,
+            make: listing.make,
+            model: listing.model,
+            year: listing.year,
+            condition: listing.condition,
+            city: listing.city,
+            price: `${listing.priceSantim / 100} ETB`,
+            mileageKm: listing.mileageKm,
+            hours: listing.hours,
+            summary: listing.summary,
+            imageUrl: listing.image.startsWith("https://") ? listing.image : undefined,
+          }}
+        />
         <Link to="/$locale/c/$category" params={{ locale, category: listing.category }} className="text-sm font-semibold text-emerald">
           {copy.common.back}
         </Link>
