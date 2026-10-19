@@ -5,10 +5,10 @@ import { AUTH_PROVIDERS, signIn } from "@/lib/auth/client";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { dict, TRANSLATION_REVIEW } from "@/lib/i18n";
 import { accountFacts, listInquiries } from "@/lib/marketplace/api";
-import { btnPrimary } from "@/components/dalala/chrome";
-import { readTelegramResult } from "@/components/dalala/telegram";
-import { SellerProfileEditor } from "@/components/dalala/seller-profile";
-import { PushNotifications } from "@/components/dalala/push-notifications";
+import { btnPrimary } from "@/components/bultum/chrome";
+import { readTelegramResult } from "@/components/bultum/telegram";
+import { SellerProfileEditor } from "@/components/bultum/seller-profile";
+import { PushNotifications } from "@/components/bultum/push-notifications";
 import type { TelegramAuthResult } from "@/lib/telegram/api";
 
 export const Route = createFileRoute("/$locale/account")({ component: AccountPage });
@@ -88,6 +88,15 @@ function AccountPage() {
           <p className="text-sm">
             {copy.account.role}: {roleLabel}
           </p>
+          {facts?.roles.some((value) => ["admin", "super_admin", "platform_owner", "moderator"].includes(value)) ? (
+            <Link
+              to="/$locale/admin"
+              params={{ locale }}
+              className={btnPrimary}
+            >
+              Open admin moderation
+            </Link>
+          ) : null}
         </section>
       ) : null}
       {user ? <SellerProfileEditor locale={locale} /> : null}
