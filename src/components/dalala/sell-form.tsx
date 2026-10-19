@@ -7,17 +7,23 @@ import { CATEGORIES, CITIES } from "@/lib/marketplace/status";
 import { attachListingMedia, createDraft, listMine, setListingStatus, type ListingCard } from "@/lib/marketplace/api";
 import { btnGhost, btnPrimary, cityName, PriceTag } from "./chrome";
 import { MediaUploader, type UploadedMedia } from "./media-uploader";
-
+import { useTelegramMainButton, tgHaptic } from "./telegram";
 export function SellDesk({ locale }: { locale: Locale }) {
   const { user, isPending } = useCurrentUserState();
   if (isPending) return <div className="rounded-card border border-line-soft bg-card p-6 text-muted">Loading seller workspace…</div>;
   if (!user) return <RedirectToSignIn />;
   return <SellBody locale={locale} />;
 }
-import { useTelegramMainButton, tgHaptic } from "./telegram";
 
-// inside SellBody / the form component:
-useTelegramMainButton({
+function SellBody({ locale }: { locale: Locale }) {
+  const copy = dict(locale);
+  const [items, setItems] = useState<ListingCard[] | null>(null);
+  const [note, setNote] = useState("");
+  const [pending, setPending] = useState(false);
+  const [category, setCategory] = useState<(typeof CATEGORIES)[number]>("cars");
+  const [tick, setTick] = useState(0);
+  const [media, setMedia] = useState<UploadedMedia[]>([]);
+  useTelegramMainButton({
   label: pending ? "Saving…" : "Publish listing",
   enabled: !pending,
   progress: pending,
@@ -27,17 +33,6 @@ useTelegramMainButton({
     // or call your submit() function
   },
 });
-
-// after successful publish:
-tgHaptic("success");
-function SellBody({ locale }: { locale: Locale }) {
-  const copy = dict(locale);
-  const [items, setItems] = useState<ListingCard[] | null>(null);
-  const [note, setNote] = useState("");
-  const [pending, setPending] = useState(false);
-  const [category, setCategory] = useState<(typeof CATEGORIES)[number]>("cars");
-  const [tick, setTick] = useState(0);
-  const [media, setMedia] = useState<UploadedMedia[]>([]);
   const heavy = category === "machinery" || category === "agriculture";
 
   useEffect(() => {
@@ -77,6 +72,7 @@ function SellBody({ locale }: { locale: Locale }) {
       });
       if (media.length) await attachListingMedia({ data: { listingId: created.id, media } });
       if (review) await setListingStatus({ data: { id: created.id, to: "pending" } });
+      tgHaptic("success");
       form.reset();
       setMedia([]);
       setNote(review ? copy.sell.submitted : copy.sell.saved);
