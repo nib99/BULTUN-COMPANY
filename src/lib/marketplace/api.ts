@@ -24,6 +24,17 @@ const citySchema = z.enum([
   "gondar",
 ]);
 
+const MARKETPLACE_ADMIN_ROLES = ["admin", "super_admin", "platform_owner", "moderator"] as const;
+
+async function requireMarketplaceAdmin(sql: Awaited<ReturnType<typeof import("@/lib/db").getSql>>, userId: string) {
+  const roles = await sql<{ role: string }>`
+    select role from role_assignments where user_id = ${userId}
+  `;
+  if (!roles.some((row) => (MARKETPLACE_ADMIN_ROLES as readonly string[]).includes(row.role))) {
+    throw new Error("forbidden");
+  }
+}
+
 export type ListingCard = {
   id: string;
   category: Category;
@@ -417,6 +428,7 @@ export const setListingStatus = createServerFn({ method: "POST" })
       select status from listings where id = ${data.id} and seller_user_id = ${context.userId}
     `;
     const from = current[0]?.status;
+    if (data.to === "published") throw new Error("forbidden");
     if (!from || !isListingStatus(from) || !canSellerTransition(from, data.to)) {
       throw new Error("forbidden");
     }
@@ -690,6 +702,55 @@ export const attachListingMedia = createServerFn({ method: "POST" })
       await sql`update listings set cover_path = ${firstImage.url}, updated_at = now() where id = ${data.listingId}`;
     }
     return { ok: true as const };
+  });
+
+export const adminListPendingListings = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((input: unknown) => z.object({ locale: localeSchema }).parse(input))
+  .handler(async ({ data, context }) => {
+    const sql = await db();
+    await requireMarketplaceAdmin(sql, context.userId);
+    const rows = await sql.query<Raw>(
+      `${CARD_SQL}
+       where l.status = 'pending'
+       order by l.created_at asc
+       limit 100`,
+      [data.locale],
+    );
+    return rows.map(mapCard);
+  });
+
+export const adminModerateListing = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .validator((input: unknown) =>
+    z.object({
+      id: z.string().regex(/^[a-z0-9-]{4,80}$/),
+      to: z.enum(["published", "archived"]),
+      note: z.string().trim().max(1000).default(""),
+    }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const sql = await db();
+    await requireMarketplaceAdmin(sql, context.userId);
+
+    const current = await sql<{ status: string }>`
+      select status from listings where id = ${data.id}
+    `;
+    if (current[0]?.status !== "pending") throw new Error("invalid_transition");
+
+    const updated = await sql<{ id: string; status: string }>`
+      update listings
+      set status = ${data.to},
+          moderation_note = ${data.note},
+          reviewed_by = ${context.userId},
+          reviewed_at = now(),
+          updated_at = now()
+      where id = ${data.id} and status = 'pending'
+      returning id, status
+    `;
+    if (!updated.length) throw new Error("conflict");
+
+    return { ok: true as const, id: data.id, status: data.to };
   });
 
 export const setSellerVerification = createServerFn({ method: "POST" })
