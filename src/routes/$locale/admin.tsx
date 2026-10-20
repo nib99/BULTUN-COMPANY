@@ -5,7 +5,7 @@ import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { RedirectToSignIn } from "@/lib/auth/gates";
 import { adminListPendingListings, adminModerateListing, type ListingCard } from "@/lib/marketplace/api";
 import { dict, type Locale } from "@/lib/i18n";
-import { btnGhost, btnPrimary, cityName, PriceTag } from "@/components/dalala/chrome";
+import { btnGhost, btnPrimary, cityName, PriceTag } from "@/components/bultum/chrome";
 
 export const Route = createFileRoute("/$locale/admin")({ component: AdminPage });
 
